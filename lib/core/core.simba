@@ -691,16 +691,3 @@ function ogl.setup(funcWidth,funcHeight:int32=0):boolean;
     else
       writeLN('glxMapHooks was successful.');
   end;
-
-  var
-    a:double;
-    //pi over 180
-begin
-  a:=2.4;
-  ogl.setup();
-  repeat
-    a:=minimap.getRadians();
-
-    writeLN(a);
-  until false;
-end.
