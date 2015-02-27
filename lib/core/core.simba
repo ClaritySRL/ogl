@@ -4,15 +4,17 @@
 {$include_once ogl/lib/misc/smart.simba}
 {$include_once ogl/lib/core/type.simba}
 {$include_once ogl/lib/core/debug.simba}
+{$include_once ogl/lib/core/math.simba}
 {$include_once ogl/lib/core/method.simba}
 {$include_once ogl/lib/interfaces/actionBar.simba}
 {$include_once ogl/lib/interfaces/inventory.simba}
+{$include_once ogl/lib/interfaces/minimap.simba}
 
 function ogl.getChars():glCharArray;
   var
     funcPointer:pointer;
-    funcPointerSize:uInt32=0;
-    funcResultIndex:int64=0;
+    funcPointerSize,
+      funcResultIndex:uInt32=0;
   begin
     funcPointer:=glxFonts(funcPointerSize);
     if funcPointerSize<1 then
@@ -26,7 +28,7 @@ function ogl.getChars():glCharArray;
     exit(result);
   end;
 
-function ogl.getChars(funcTextureID:uInt32):glCharArray;overload
+function ogl.getChars(funcTextureID:uInt32):glCharArray;overload;
   var
     funcPointer:pointer;
     funcPointerIndex,
@@ -51,7 +53,7 @@ function ogl.getChars(funcTextureID:uInt32):glCharArray;overload
     exit(result);
   end;
 
-function ogl.getChars(funcTextureID:uInt32;funcColour:int32):glCharArray;overload
+function ogl.getChars(funcTextureID:uInt32;funcColour:int32):glCharArray;overload;
   var
     funcPointer:pointer;
     funcPointerIndex,
@@ -76,7 +78,7 @@ function ogl.getChars(funcTextureID:uInt32;funcColour:int32):glCharArray;overloa
     exit(result);
   end;
 
-function ogl.getChars(funcTextureID:uInt32;funcBounds:tBox):glCharArray;overload
+function ogl.getChars(funcTextureID:uInt32;funcBounds:tBox):glCharArray;overload;
   var
     funcPointer:pointer;
     funcPointerIndex,
@@ -204,7 +206,7 @@ function ogl.getChars(funcTextureID:array of uInt32;funcColour:array of int32):g
     for funcPointerIndex to funcPointerSize-1 do
       begin
         for funcTextureIDIndex:=0 to high(funcTextureID) do
-          for funcColourIndex:=0 to high(funcColourIndex) do
+          for funcColourIndex:=0 to high(funcColour) do
             if (funcPointer^=funcTextureID[funcTextureIDIndex]) and similarColors((funcPointer+4)^,funcColour[funcColourIndex],oglColourTolerance) then
               begin
                 result[funcResultIndex]:=glChar(funcPointer^);
@@ -246,7 +248,7 @@ function ogl.getChars(funcTextureID:array of uInt32;funcColour:array of int32;fu
     exit(result);
   end
 
-function ogl.getChars(funcBounds:tBox):glCharArray;overload
+function ogl.getChars(funcBounds:tBox):glCharArray;overload;
   var
     funcPointer:pointer;
     funcPointerIndex,
@@ -263,7 +265,6 @@ function ogl.getChars(funcBounds:tBox):glCharArray;overload
           begin
             result[funcResultIndex]:=glChar(funcPointer^);
             funcResultIndex:=funcResultIndex+1;
-            break;
           end;
         funcPointer:=funcPointer+48;
       end;
@@ -404,8 +405,8 @@ function ogl.getModels(funcBounds:tBox):glModelArray;overload;
 function ogl.getTextures():glTextureArray;
   var
     funcPointer:pointer;
-    funcResultIndex:int64=0;
-    funcPointerSize:uInt32=0;
+    funcPointerSize,
+      funcResultIndex:uInt32=0;
   begin
     funcPointer:=glxTextures(funcPointerSize);
     if funcPointerSize<1 then
@@ -423,8 +424,8 @@ function ogl.getTextures(funcID:uInt32):glTextureArray;overload;
   var
     funcPointer:pointer;
     funcPointerIndex,
-      funcResultIndex:int64=0;
-    funcPointerSize:uInt32=0;
+      funcPointerSize,
+      funcResultIndex:uInt32=0;
   begin
     funcPointer:=glxTextures(funcPointerSize);
     if funcPointerSize<1 then
@@ -444,14 +445,14 @@ function ogl.getTextures(funcID:uInt32):glTextureArray;overload;
     exit(result);
   end;
 
-function ogl.getTextures(funcID:uInt32;funcColour:int32):glTextureArray;overload
+function ogl.getTextures(funcID:uInt32;funcColour:int32):glTextureArray;overload;
   var
     funcPointer:pointer;
     funcPointerIndex,
       funcPointerSize,
       funcResultIndex:uInt32=0;
   begin
-    funcPointer:=glxFonts(funcPointerSize);
+    funcPointer:=glxTextures(funcPointerSize);
     if funcPointerSize<1 then
       exit();
     setLength(result,funcPointerSize);
@@ -469,7 +470,7 @@ function ogl.getTextures(funcID:uInt32;funcColour:int32):glTextureArray;overload
     exit(result);
   end;
 
-function ogl.getTextures(funcID:uInt32;funcBounds:tBox):glTextureArray;overload
+function ogl.getTextures(funcID:uInt32;funcBounds:tBox):glTextureArray;overload;
   var
     funcPointer:pointer;
     funcPointerIndex,
@@ -523,7 +524,7 @@ function ogl.getTextures(funcID:array of uInt32):glTextureArray;overload;
     exit(result);
   end;
 
-function ogl.getTextures(funcID:array of uInt32;funcColour:int32):glTextureArray;overload;
+function ogl.getTextures(funcID:array of int32;funcColour:int32):glTextureArray;overload;
   var
     funcPointer:pointer;
     funcIDIndex,
@@ -550,7 +551,36 @@ function ogl.getTextures(funcID:array of uInt32;funcColour:int32):glTextureArray
       end;
     setLength(result,funcResultIndex);
     exit(result);
-  end
+  end;
+
+function ogl.getTextures(funcID,funcColourID:array of int32):glTextureArray;overload;
+  var
+    funcPointer:pointer;
+    funcColourIDIndex,
+      funcIDIndex,
+      funcPointerIndex,
+      funcPointerSize,
+      funcResultIndex:uInt32=0;
+  begin
+    funcPointer:=glxTextures(funcPointerSize);
+    if funcPointerSize<1 then
+      exit();
+    setLength(result,funcPointerSize);
+    for funcPointerIndex to funcPointerSize-1 do
+      begin
+        for funcIDIndex:=0 to high(funcID) do
+          for funcColourIDIndex:=0 to high(funcColourID) do
+            if (funcPointer^=funcID[funcIDIndex]) and similarColors((funcPointer+4)^,funcColourID[funcColourIDIndex],oglColourTolerance) then
+              begin
+                result[funcResultIndex]:=glTexture(funcPointer^);
+                funcResultIndex:=funcResultIndex+1;
+                break;
+              end;
+        funcPointer:=funcPointer+36;
+      end;
+    setLength(result,funcResultIndex);
+    exit(result);
+  end;
 
 function ogl.getTextures(funcID:array of uInt32;funcColour:int32;funcBounds:tBox):glTextureArray;overload;
   var
@@ -579,7 +609,7 @@ function ogl.getTextures(funcID:array of uInt32;funcColour:int32;funcBounds:tBox
       end;
     setLength(result,funcResultIndex);
     exit(result);
-  end
+  end;
 
 function ogl.getTextures(funcBounds:tBox):glTextureArray;overload;
   var
@@ -661,3 +691,16 @@ function ogl.setup(funcWidth,funcHeight:int32=0):boolean;
     else
       writeLN('glxMapHooks was successful.');
   end;
+
+  var
+    a:double;
+    //pi over 180
+begin
+  a:=2.4;
+  ogl.setup();
+  repeat
+    a:=minimap.getRadians();
+
+    writeLN(a);
+  until false;
+end.

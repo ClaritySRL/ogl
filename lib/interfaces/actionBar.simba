@@ -63,6 +63,8 @@ function actionBar.clickAction(funcID:int32):boolean;
             else
               funcPointer:=funcPointer+360;
           end
+        else if funcPointer^=11475 then
+          break
         else
           funcPointer:=funcPointer+36;
       end;
@@ -82,7 +84,7 @@ function actionBar.clickAction(funcID,funcColourID:int32):boolean;overload;
       exit();}
     for funcPointerIndex to funcPointerSize-1 do
       begin
-        if (funcPointer^=9900) then
+        if funcPointer^=9900 then
           begin
             if ((funcPointer+180)^=funcID) and similarColors((funcPointer+184)^,funcColourID,oglColourTolerance) then
               begin
@@ -96,6 +98,8 @@ function actionBar.clickAction(funcID,funcColourID:int32):boolean;overload;
             else
               funcPointer:=funcPointer+360;
           end
+        else if funcPointer^=11475 then
+          break
         else
           funcPointer:=funcPointer+36;
       end;
@@ -280,6 +284,11 @@ function actionBar.getAbilityKey(funcString:ansiString):char;
             else
               funcPointer:=funcPointer+360;
           end
+        else if funcPointer^=11475 then
+          begin
+            funcPointerIndex:=funcPointerSize;
+            break;
+          end
         else
           funcPointer:=funcPointer+36;
       end;
@@ -332,7 +341,7 @@ function actionBar.getActionKey(funcID:int32):char;
       exit();}
     for funcPointerIndex to funcPointerSize-1 do
       begin
-        if (funcPointer^=9900) then
+        if funcPointer^=9900 then
           begin
             if (funcPointer+180)^=funcID then
               begin
@@ -341,6 +350,11 @@ function actionBar.getActionKey(funcID:int32):char;
               end
             else
               funcPointer:=funcPointer+360;
+          end
+        else if funcPointer^=11475 then
+          begin
+            funcPointerIndex:=funcPointerSize;
+            break;
           end
         else
           funcPointer:=funcPointer+36;
@@ -374,7 +388,7 @@ function actionBar.getActionKey(funcID,funcColourID:int32):char;overload;
       exit();}
     for funcPointerIndex to funcPointerSize-1 do
       begin
-        if (funcPointer^=9900) then
+        if funcPointer^=9900 then
           begin
             if ((funcPointer+180)^=funcID) and similarColors((funcPointer+184)^,funcColourID,oglColourTolerance) then
               begin
@@ -383,6 +397,11 @@ function actionBar.getActionKey(funcID,funcColourID:int32):char;overload;
               end
             else
               funcPointer:=funcPointer+360;
+          end
+        else if funcPointer^=11475 then
+          begin
+            funcPointerIndex:=funcPointerSize;
+            break;
           end
         else
           funcPointer:=funcPointer+36;
@@ -448,41 +467,6 @@ function actionBar.getAdrenaline():int32;
     all abilities and empty actionBar
     slots.
   *)
-  __colourID:=actionBar.getAbilityColourID('slice');
-  actionBar.clickAction(137700,__colourID);
-  ========================================
-}
-
-function actionBar.getAutoRetaliate():boolean;
-  var
-    funcPointer:pointer;
-    funcPointerIndex,
-      funcPointerSize:uInt32=0;
-  begin
-    funcPointer:=glxTextures(funcPointerSize);
-    {if funcPointerSize<1 then
-      exit();}
-    for funcPointerIndex to funcPointerSize-1 do
-      begin
-        if (funcPointer^=27966) then
-          begin
-            result:=true;
-            break;
-          end;
-          funcPointer:=funcPointer+36;
-      end;
-    exit(result);
-  end;
-
-{
-  ========================================
-  EXAMPLES:
-  ----------------------------------------
-  (*
-    DESCRIPTION: The ID 137700 belongs to
-    all abilities and empty actionBar
-    slots.
-  *)
   if actionBar.getActionBar()<>4 then
     actionBar.setActionBar(4);
   ========================================
@@ -504,6 +488,11 @@ function actionBar.getActionBar():int32;
           begin
             funcBounds:=[(funcPointer+20)^,(funcPointer+24)^,(funcPointer+28)^,(funcPointer+32)^];
             break;
+          end
+        else if funcPointer^=11475 then
+          begin
+            funcPointerIndex:=funcPointerSize;
+            break;
           end;
         funcPointer:=funcPointer+36;
       end;
@@ -520,6 +509,43 @@ function actionBar.getActionBar():int32;
             break;
           end;
         funcPointer:=funcPointer+48;
+      end;
+    exit(result);
+  end;
+
+{
+  ========================================
+  EXAMPLES:
+  ----------------------------------------
+  (*
+    DESCRIPTION: The ID 137700 belongs to
+    all abilities and empty actionBar
+    slots.
+  *)
+  __colourID:=actionBar.getAbilityColourID('slice');
+  actionBar.clickAction(137700,__colourID);
+  ========================================
+}
+
+function actionBar.getAutoRetaliate():boolean;
+  var
+    funcPointer:pointer;
+    funcPointerIndex,
+      funcPointerSize:uInt32=0;
+  begin
+    funcPointer:=glxTextures(funcPointerSize);
+    {if funcPointerSize<1 then
+      exit();}
+    for funcPointerIndex to funcPointerSize-1 do
+      begin
+        if funcPointer^=27966 then
+          begin
+            result:=true;
+            break;
+          end
+        else if funcPointer^=11475 then
+          break;
+        funcPointer:=funcPointer+36;
       end;
     exit(result);
   end;
@@ -605,13 +631,15 @@ function actionBar.getQuickPrayer():boolean;
       exit();}
     for funcPointerIndex to funcPointerSize-1 do
       begin
-        if (funcPointer^=61688) then
+        if funcPointer^=61688 then
           begin
             if similarColors((funcPointer+4)^,4272497,oglColourTolerance) then
               result:=true;
             break;
-          end;
-          funcPointer:=funcPointer+36;
+          end
+        else if funcPointer^=11475 then
+          break;
+        funcPointer:=funcPointer+36;
       end;
     exit(result);
   end;
@@ -646,9 +674,16 @@ function actionBar.getSlotKey(funcSlotNumber:int32):char;
               end
             else
               funcSlotIndex:=funcSlotIndex+1;
+          end
+        else if funcPointer^=11475 then
+          begin
+            funcPointerIndex:=funcPointerSize;
+            break;
           end;
         funcPointer:=funcPointer+36;
       end;
+    if funcPointerIndex=funcPointerSize then
+      exit();
     funcPointer:=glxFonts(funcPointerSize);
     {if funcPointerSize<1 then
       exit(result);}
@@ -733,6 +768,11 @@ function actionBar.setActionBar(funcActionBar:int32):boolean;
         if funcPointer^=28793 then
           begin
             funcBounds:=[(funcPointer+20)^,(funcPointer+24)^,(funcPointer+28)^,(funcPointer+32)^];
+            break;
+          end
+        else if funcPointer^=11475 then
+          begin
+            funcPointerIndex:=funcPointerSize;
             break;
           end;
         funcPointer:=funcPointer+36;
@@ -847,7 +887,9 @@ function actionBar.setQuickPrayer(funcEnable:boolean):boolean;
                 result:=true;
               end;
             break;
-          end;
+          end
+        else if funcPointer^=11475 then
+          break;
         funcPointer:=funcPointer+36;
       end;
     exit(result);

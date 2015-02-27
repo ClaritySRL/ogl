@@ -1,0 +1,130 @@
+function minimap.clickResetCamera():boolean;
+  var
+    funcBounds:tBox;
+    funcPointer:pointer;
+    funcPointerIndex,
+      funcPointerSize:uInt32=0;
+    funcX,
+      funcY:int32;
+  begin
+    funcPointer:=glxTextures(funcPointerSize);
+    {if funcPointerSize<1 then
+      exit();}
+    for funcPointerIndex to funcPointerSize-1 do
+      begin
+        if funcPointer^=147885 then
+          begin
+            clickMouse(random((funcX:=(funcPointer+12)^)-16,funcX+16),random((funcY:=(funcPointer+16)^)-16,funcY+16),1);
+            result:=true;
+            break;
+          end;
+        funcPointer:=funcPointer+36;
+      end;
+    exit(result);
+  end;
+
+function minimap.getDegrees():int32;
+  var
+    funcAngle:double;
+    mapX,
+      mapY:array[0..3] of single;
+  begin
+    glxMapCoords(mapX,mapY);
+    funcAngle:=arcTan2(mapY[3]-mapY[0],mapX[3]-mapX[0]);
+    if funcAngle>0 then
+      result:=round(funcAngle*360/(2*pi))
+    else
+      result:=round((2*pi+funcAngle)*360/(2*pi));
+    exit(result);
+  end;
+
+function minimap.getDegreesE():double;
+  var
+    funcAngle:double;
+    mapX,
+      mapY:array[0..3] of single;
+  begin
+    glxMapCoords(mapX,mapY);
+    funcAngle:=arcTan2(mapY[3]-mapY[0],mapX[3]-mapX[0]);
+    if funcAngle>0 then
+      result:=funcAngle*360/(2*pi)
+    else
+      result:=(2*pi+funcAngle)*360/(2*pi);
+    exit(result);
+  end;
+
+function minimap.getRadians():double;
+  var
+    mapX,
+      mapY:array[0..3] of single;
+  begin
+    glxMapCoords(mapX,mapY);
+    result:=arcTan2(mapY[3]-mapY[0],mapX[3]-mapX[0]);
+    if result<0 then
+      result:=2*pi+result;
+    exit(result);
+  end;
+
+
+
+function minimap.getRunEnergy():integer;
+  var
+    funcBounds:tBox;
+    funcPointer:pointer;
+    funcPointerIndex,
+      funcPointerSize:uInt32=0;
+  begin
+    funcPointer:=glxTextures(funcPointerSize);
+    {if funcPointerSize<1 then
+      exit();}
+    for funcPointerIndex to funcPointerSize-1 do
+      begin
+        if funcPointer^=159981 then
+          begin
+            funcBounds:=[integer((funcPointer+12)^-17),integer((funcPointer+16)^-17),integer((funcPointer+12)^+17),integer((funcPointer+16)^+17)];
+            break;
+          end;
+        funcPointer:=funcPointer+36;
+      end;
+    if funcPointerIndex=funcPointerSize then
+      exit();
+    funcPointer:=glxFonts(funcPointerSize);
+    {if funcPointerSize<1 then
+      exit(result);}
+    for funcPointerIndex:=0 to funcPointerSize-1 do
+      begin
+        if pointInBox([(funcPointer+8)^,(funcPointer+12)^],funcBounds) then
+          begin
+            if (funcPointer+16)^=37 then
+              break
+            else if (funcPointer+4)^=16777215 then
+              result:=result*10+((funcPointer+16)^-48);
+          end;
+        funcPointer:=funcPointer+48;
+      end;
+    exit(result);
+  end;
+
+function minimap.getRunMode():boolean;
+  var
+    funcBounds:tBox;
+    funcPointer:pointer;
+    funcPointerIndex,
+      funcPointerSize:uInt32=0;
+  begin
+    funcPointer:=glxTextures(funcPointerSize);
+    {if funcPointerSize<1 then
+      exit();}
+    for funcPointerIndex to funcPointerSize-1 do
+      begin
+        if funcPointer^=24081 then
+          begin
+            result:=true;
+            break;
+          end
+        else if funcPointer^=147885 then
+          break;
+        funcPointer:=funcPointer+36;
+      end;
+    exit(result);
+  end;

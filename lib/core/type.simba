@@ -48,6 +48,14 @@ type inventory=record
   __:boolean;
 end;
 
+type math=record
+  __:boolean;
+end;
+
+type minimap=record
+  __:boolean;
+end;
+
 type ogl=record
   __:boolean;
 end;
